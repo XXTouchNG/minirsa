@@ -34,6 +34,9 @@ static int public_encrypt(unsigned char *data, int data_len, unsigned char *key,
 static int minirsa_public_encrypt(lua_State *L) {
     size_t data_len, key_len;
     unsigned char *orig_data = (unsigned char *) luaL_checklstring(L, 1, &data_len);
+    if (data_len > max_len - 11) {
+        luaL_error(L, "Input data is too large (> %zu bytes).", max_len - 11);
+    }
     unsigned char *orig_key = (unsigned char *) luaL_checklstring(L, 2, &key_len);
     unsigned char *output_buffer = (unsigned char *) malloc(max_len + 1);
     memset(output_buffer, 0x0, max_len + 1);
@@ -42,6 +45,7 @@ static int minirsa_public_encrypt(lua_State *L) {
     } else {
         lua_pushboolean(L, false);
     }
+    free(output_buffer);
     return 1;
 }
 
@@ -61,6 +65,7 @@ static int minirsa_private_decrypt(lua_State *L) {
     } else {
         lua_pushboolean(L, false);
     }
+    free(output_buffer);
     return 1;
 }
 
@@ -72,6 +77,9 @@ static int private_encrypt(unsigned char *data, int data_len, unsigned char *key
 static int minirsa_private_encrypt(lua_State *L) {
     size_t data_len, key_len;
     unsigned char *orig_data = (unsigned char *) luaL_checklstring(L, 1, &data_len);
+    if (data_len > max_len - 11) {
+        luaL_error(L, "Input data is too large (> %zu bytes).", max_len - 11);
+    }
     unsigned char *orig_key = (unsigned char *) luaL_checklstring(L, 2, &key_len);
     unsigned char *output_buffer = (unsigned char *) malloc(max_len + 1);
     memset(output_buffer, 0x0, max_len + 1);
@@ -80,6 +88,7 @@ static int minirsa_private_encrypt(lua_State *L) {
     } else {
         lua_pushboolean(L, false);
     }
+    free(output_buffer);
     return 1;
 }
 
@@ -99,6 +108,7 @@ static int minirsa_public_decrypt(lua_State *L) {
     } else {
         lua_pushboolean(L, false);
     }
+    free(output_buffer);
     return 1;
 }
 
